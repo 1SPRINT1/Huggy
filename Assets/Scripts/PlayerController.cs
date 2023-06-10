@@ -18,15 +18,27 @@ public class PlayerController : MonoBehaviour
     private Animator _anim;
     private int _Forcespeed = 40;
 
+    public int Health;
+    public Text txtHealth;
+
+
     [Header("Проверка на дорогу")]
     public bool _yesRoad;
     public float JumpForce;
 
     public GameObject StartButton;
+    public GameObject PreStartPanel;
+    public GameObject ShipiObject;
+
+    [Header("Монетки и т.д")]
+    public int coins;
+    public Text txtCoins;
     private void Start()
     {
         _anim = GetComponent<Animator>();
         _rg = GetComponent<Rigidbody>();
+        Health = 100;
+        coins = 0;
     }
     private void Update()
     {
@@ -38,6 +50,9 @@ public class PlayerController : MonoBehaviour
         //  }
         //  else
         //  {
+        
+
+
         if (_anim.GetBool("isStartGame") == true)
         {
             horizontal = Input.GetAxis("Horizontal") * _speed;
@@ -78,10 +93,32 @@ public class PlayerController : MonoBehaviour
     {
         _yesRoad = true;
     }
+    private void OnTriggerStay(Collider other)
+    {
+        if (gameObject.CompareTag("Shipi"))
+        {
+            Destroy(gameObject);
+            PreStartPanel.SetActive(true);
+            StartButton.SetActive(true);
+            Health--;
+            txtHealth.text = Health.ToString();
+        }
+        if (gameObject.CompareTag("Coins"))
+        {
+            // Destroy(gameObject);
+            coins++;
+            txtCoins.text = coins.ToString();
+        }
+    }
 
     public void StartGame()
     {
         _anim.SetBool("isStartGame",true);
         StartButton.SetActive(false);
     }
+    public void PreStart()
+    {
+        PreStartPanel.SetActive(false);
+    }
+
 }
